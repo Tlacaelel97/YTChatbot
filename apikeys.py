@@ -1,0 +1,3 @@
+BOTTOKEN = 'OTc2MzI2NDc3MzE2NTIyMDc0.Gj9FYQ.IGjwic4WdU8ga7xiREeQKfmGjw7vunZ-vbZpr4'
+JOKEAPI = "joke3.p.rapidapi.com"
+JOKETOKEN = "1a76ee64aemsh060056238a74f47p184e60jsn48eba8f94e1c"
