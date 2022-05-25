@@ -1,5 +1,6 @@
 import discord 
 from discord.ext import commands
+from discord import FFmpegPCMAudio
 import requests
 import json
 
@@ -51,7 +52,7 @@ async def on_member_join(member):
     await channel.send(json.loads(response.text)['content'])
 
 """
-Goodbye to a membr
+Goodbye to a member
 """
 @client.event
 async def on_member_remove(member):
@@ -66,7 +67,10 @@ Joining and leaving a channel voice
 async def join(ctx):
     if (ctx.author.voice):
         channel = ctx.message.author.voice.channel
-        await channel.connect()
+        voice = await channel.connect()
+        source = FFmpegPCMAudio('ambient-bell-guitar.wav')
+        pñayer = voice.play(source)
+
     else:
         await ctx.send('You must be in a voice channel to run this command')
 
@@ -80,6 +84,8 @@ async def leave(ctx):
         await ctx.send('I left the voice channel')
     else:
         await ctx.send('I am not in a voice channel')
+
+
 
 client.run(BOTTOKEN) 
 
