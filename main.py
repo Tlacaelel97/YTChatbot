@@ -69,7 +69,7 @@ async def join(ctx):
         channel = ctx.message.author.voice.channel
         voice = await channel.connect()
         source = FFmpegPCMAudio('ambient-bell-guitar.wav')
-        pñayer = voice.play(source)
+        player = voice.play(source)
 
     else:
         await ctx.send('You must be in a voice channel to run this command')
@@ -85,6 +85,41 @@ async def leave(ctx):
     else:
         await ctx.send('I am not in a voice channel')
 
+"""
+Pause, resume, stop
+"""
+@client.command(pass_context=True)
+async def pause(ctx):
+    #get channel voice
+    voice = discord.utils.get(client.voice_clients,guild=ctx.guild)
+    #if bot is playing
+    if voice.is_playing():
+        voice.pause
+    #it it doesn't playing
+    else:
+        await ctx.send('At the moment, there is no audio playing in the voice channel')
+
+@client.command(pass_context=True)
+async def resume(ctx):
+    voice = discord.utils.get(client.voice_clients,guild=ctx.guild)
+    #If th emusic is paused
+    if voice.is_paused():
+        #play
+        voice.resume()
+    # it it´s not paused
+    else:
+        await ctx.send('At the moment, there is no song paused!')
+
+@client.command(pass_context=True)
+async def stop(ctx):
+    voice = discord.utils.get(client.voice_clients,guild=ctx.guild)
+    voice.stop()
+
+@client.command(pass_context=True)
+async def play(ctx,arg):
+    voice = ctx.guild.voice_client
+    source = FFmpegPCMAudio(arg + '.wav')
+    player = voice.play(source)
 
 
 client.run(BOTTOKEN) 
