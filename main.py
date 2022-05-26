@@ -11,6 +11,15 @@ from apikeys import *
 intents = discord.Intents.default()
 intents.members=True
 
+queues = {}
+
+def check_queue(ctx,id):
+    if queues[id] != []:
+        voice = ctx.guild.voice_client
+        #remove the first element
+        source = queues[id].pop(0)
+        player = voice.play(source)
+
 #initialize bot
 client = commands.Bot(command_prefix = '!',intents=intents)
 
@@ -81,7 +90,7 @@ async def leave(ctx):
         #Then leave the channel
         await ctx.guild.voice_client.disconnect()
         #Say goodbye
-        await ctx.send('I left the voice channel')
+        await ctx.send('I have left the voice channel')
     else:
         await ctx.send('I am not in a voice channel')
 
@@ -118,8 +127,26 @@ async def stop(ctx):
 @client.command(pass_context=True)
 async def play(ctx,arg):
     voice = ctx.guild.voice_client
-    source = FFmpegPCMAudio(arg + '.wav')
-    player = voice.play(source)
+    song = arg + '.wav'
+    source = FFmpegPCMAudio(song)
+    #check if there is another song in the list
+    player = voice.play(source,after=lambda x=None: check_queue(ctx,ctx.message.guild.id))
+
+@client.command(pass_context=True)
+async def queue(ctx,arg):
+    voice = ctx.guild.voice_client
+    song = arg + '.wav'
+    source = FFmpegPCMAudio(song)
+    #get id of the discord server
+    guild_id = ctx.message.guild.id
+    if guild_id in queues:
+        queues[guild_id].append(source)
+
+    else:
+        queues[guild_id] = [source]
+
+    await ctx.send('Added to queue')
+
 
 
 client.run(BOTTOKEN) 
