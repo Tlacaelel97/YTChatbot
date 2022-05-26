@@ -147,7 +147,17 @@ async def queue(ctx,arg):
 
     await ctx.send('Added to queue')
 
+"""
+Detecting Specific Words
+"""
 
+@client.event
+async def on_message(message):
+    if message.content == "fuck you":
+        #delete the message
+        await message.delete()
+        #send a warning
+        await message.channel.send("Don't send that again, or you will be baned!")
 
 client.run(BOTTOKEN) 
 
