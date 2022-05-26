@@ -1,8 +1,11 @@
 import discord 
 from discord.ext import commands
 from discord import FFmpegPCMAudio
+from discord import member
+from discord.ext.commands import has_permissions, MissingPermissions
 import requests
 import json
+import os
 
 #import Bot token
 
@@ -158,6 +161,33 @@ async def on_message(message):
         await message.delete()
         #send a warning
         await message.channel.send("Don't send that again, or you will be baned!")
+
+"""
+kick/ban
+"""
+
+@client.command()
+@has_permissions(kick_members=True)
+async def kick(ctx,member: discord.member, *, reason=None):
+    await member.kick(reason=reason)
+    await ctx.send(f'User {member} has been kicked')
+
+@kick.error
+async def kick_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send('You do not have permissions to kick people')
+
+@client.command()
+@has_permissions(ban_members=True)
+async def ban(ctx,member: discord.member, *, reason=None):
+    await member.ban(reason=reason)
+    await ctx.send(f'User {member} has been banned')
+
+@kick.error
+async def ban_error(ctx, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.send('You do not have permissions to ban people')
+
 
 client.run(BOTTOKEN) 
 
